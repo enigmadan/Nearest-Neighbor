@@ -1,0 +1,81 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+
+public class NNPostProcessing {
+
+  ArrayList<DataObject> trainer = new ArrayList<DataObject>();
+	ArrayList<DataObject> tester = new ArrayList<DataObject>();
+
+	public NNPostProcessing(String traintxt,String testtxt) throws FileNotFoundException{
+		trainer = readIt(traintxt);
+		tester = readIt(testtxt);
+		normalize();
+
+	}
+	private void normalize(){
+		int i = trainer.get(0).attributes.size();
+		for(int j = 0;j<i;j++){
+			normalize(j);
+		}
+
+	}
+	private void normalize(int i){
+		double min = getMin(i);
+		double max = getMax(i);
+		
+		for(int j = 0;j<trainer.size();j++){
+			double val = trainer.get(j).attributes.get(i);
+			double normalized = (val-min)/(max-min);
+			trainer.get(j).attributes.add(i, normalized);
+		}
+	}
+	private double getMax(int i){
+		double big = -1;
+		for(int j = 0;j<trainer.size();j++){
+			double temp = trainer.get(j).attributes.get(i);
+			if(temp>big){
+				big = temp;
+			}
+		}
+		return big;
+	}
+	private double getMin(int i){
+		double small = Double.MAX_VALUE;
+		for(int j = 0;j<trainer.size();j++){
+			double temp = trainer.get(j).attributes.get(i);
+			if(temp<small){
+				small = temp;
+			}
+		}
+		return small;
+	}
+	private ArrayList<DataObject> readIt(String s) throws FileNotFoundException{
+		ArrayList<DataObject> returnAr = new ArrayList<DataObject>();
+		Scanner trainLine = new Scanner(new File(s));
+
+		while(trainLine.hasNext()){
+			Scanner train = new Scanner(trainLine.nextLine());
+			train.useDelimiter(",");
+			ArrayList<Double> ar = new ArrayList<Double>();
+			String str = null;
+			while(train.hasNext()){
+				String temp = train.next();
+				try{
+					ar.add(Double.valueOf(temp));
+				}catch(NumberFormatException e){
+					str = temp;
+				}
+			}
+			returnAr.add(new DataObject(str,ar));
+			train.close();
+		}
+		trainLine.close();
+		return returnAr;
+	}
+
+}
+
+
