@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class NNPostProcessing {
 
-  ArrayList<DataObject> trainer = new ArrayList<DataObject>();
+	ArrayList<DataObject> trainer = new ArrayList<DataObject>();
 	ArrayList<DataObject> tester = new ArrayList<DataObject>();
 
 	public NNPostProcessing(String traintxt,String testtxt) throws FileNotFoundException{
@@ -31,7 +31,14 @@ public class NNPostProcessing {
 			double normalized = (val-min)/(max-min);
 			trainer.get(j).attributes.add(i, normalized);
 		}
+		for(int j = 0;j<tester.size();j++){
+			double val = tester.get(j).attributes.get(i);
+			double normalized = (val-min)/(max-min);
+			tester.get(j).attributes.add(i, normalized);
+		}
 	}
+	
+	
 	private double getMax(int i){
 		double big = -1;
 		for(int j = 0;j<trainer.size();j++){
