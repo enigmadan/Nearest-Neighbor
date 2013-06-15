@@ -1,0 +1,33 @@
+import java.util.ArrayList;
+
+public class KNNPrediction {
+  
+	ArrayList<DataObject> nearNeigh;
+	
+	public KNNPrediction (){
+		nearNeigh = new ArrayList<DataObject>();
+	}
+	
+	public void findNearestNeigh(){
+		
+	}
+	
+	public double euclideanDistance(DataObject tnObj, DataObject ttObj){
+		
+		double distance = 0;
+		double squaredSum = 0;
+		
+		int numOfAtt = tnObj.attributes.size();
+
+
+		for (int i = 0; i < numOfAtt; i++){
+			double diff = tnObj.attributes.get(i).doubleValue() 
+										- ttObj.attributes.get(i).doubleValue();
+			squaredSum += diff * diff;
+		}
+		
+		distance = Math.sqrt(squaredSum);
+		
+		return distance;
+	}
+}
