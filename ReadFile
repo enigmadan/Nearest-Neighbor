@@ -1,0 +1,111 @@
+
+import java.io.IOException;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.util.Random;
+import java.util.Collections;
+import java.util.Arrays;
+
+import java.util.ArrayList;
+
+
+
+public class ReadFile {
+  private String path;
+	private int numOfElements;
+	private double trainingPercent;
+	private double testingPercent;
+	
+	String[] data;
+	Random rgen = new Random();
+	
+	int counter = 0;
+
+	
+	/** Constructor */
+	
+	public ReadFile(String filePath, double perTrain, double perTest){
+		this.path = filePath;
+		this.trainingPercent = perTrain;
+		this.trainingPercent = perTest;	
+	}
+	
+	/**
+	* Reach data from raw file.
+	* Read each data object into an array for further processing.
+	* 
+	*/
+	public void processFile() throws IOException {
+	
+		BufferedReader textReader = new BufferedReader(new FileReader(this.path));
+		
+		data = new String[numOfElements];
+
+		while( textReader.read() == '%' || textReader.read() == '@' || textReader.readLine() == null)
+			textReader.readLine();
+		
+		int i = 0;
+		
+		while( textReader.readLine() != null){
+			
+			data[i] = textReader.readLine();
+			numOfElements++;
+			i++;
+		}
+		
+		textReader.close();	
+		
+		Collections.shuffle(Arrays.asList(data));	
+	}
+	
+	
+	public void makeDataSets(){
+		try{
+			createFile("myTrain", trainingPercent);
+		} catch (IOException e){
+			e.getMessage();
+		}
+		
+		try{
+			createFile("myTest", testingPercent);
+		} catch (IOException e){
+			e.getMessage();
+		}
+	}
+	
+	/**
+	 * Create training/testing file from the data array using BufferedWritter class.
+	 * The strings returned are randomly selection without replacement.
+	 * <p>
+	 * Pre: data String array
+	 * Post: File created 'fileName'.txt.
+	 */
+	public void createFile(String fileName, double percent) throws IOException{
+		BufferedWriter textWriter = new BufferedWriter(new FileWriter (fileName+".txt"));
+
+		for(int i = 0; i < (int)data.length*percent; i++){
+			textWriter.write(selectRandomDataObject());
+			textWriter.newLine();
+		}
+		
+		textWriter.close();
+	}
+	
+	/**
+	 * Selects a data object from the randomly sorted String array.
+	 * Keeps a count to maintain the selection without replacement/
+	 *
+	 * Pre: data String array
+	 * Post: File created "myTrain.txt".
+	 * @return String with the data object information
+	 */
+	public String selectRandomDataObject(){
+		
+		String dataObject = data[counter];
+		counter++;
+		
+		return dataObject;		
+	}
+}
