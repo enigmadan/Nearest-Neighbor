@@ -8,13 +8,15 @@ public class NNPostProcessing {
 
 	ArrayList<DataObject> trainer = new ArrayList<DataObject>();
 	ArrayList<DataObject> tester = new ArrayList<DataObject>();
-
+	
+	//constructor
 	public NNPostProcessing(String traintxt,String testtxt) throws FileNotFoundException{
 		trainer = readIt(traintxt);
 		tester = readIt(testtxt);
 		normalize();
-
 	}
+	
+	//normalize
 	private void normalize(){
 		int i = trainer.get(0).attributes.size();
 		for(int j = 0;j<i;j++){
@@ -22,6 +24,8 @@ public class NNPostProcessing {
 		}
 
 	}
+
+	//normalize helper that actually normalizes stuff
 	private void normalize(int i){
 		double min = getMin(i);
 		double max = getMax(i);
@@ -38,7 +42,7 @@ public class NNPostProcessing {
 		}
 	}
 	
-	
+	//get the max val from a certain attribute
 	private double getMax(int i){
 		double big = -1;
 		for(int j = 0;j<trainer.size();j++){
@@ -49,6 +53,8 @@ public class NNPostProcessing {
 		}
 		return big;
 	}
+	
+	//get the min val from a certain attribute
 	private double getMin(int i){
 		double small = Double.MAX_VALUE;
 		for(int j = 0;j<trainer.size();j++){
@@ -59,6 +65,8 @@ public class NNPostProcessing {
 		}
 		return small;
 	}
+	
+	//read the test or the train files
 	private ArrayList<DataObject> readIt(String s) throws FileNotFoundException{
 		ArrayList<DataObject> returnAr = new ArrayList<DataObject>();
 		Scanner trainLine = new Scanner(new File(s));
