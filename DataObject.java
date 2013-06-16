@@ -1,19 +1,18 @@
 import java.util.ArrayList;
-import java.util.Set;
-
 
 public class DataObject {
-
   public String classAtt;
 	public String classPredict;
 	public Boolean correct;
 	ArrayList<Double> attributes = new ArrayList<Double>();
-
+	
+	//constructor add the actual class and the attributes
 	public DataObject(String s, ArrayList<Double> ar){
 		classAtt = s;
 		attributes = ar;
 	}
-	
+
+	//set the class prediction
 	public void setPrediction(String prediction) {
 		classPredict = prediction;
 		if (classAtt.equals(classPredict)) {
@@ -22,7 +21,5 @@ public class DataObject {
 		else {
 			correct = false;
 		}
-				
-		//if classAtt = classPredict then correct = true else correct false
 	}
 }
