@@ -30,6 +30,7 @@ public class KNNPrediction {
 		nearNeigh = new ArrayList<Neighbor>();
 		k = knn;
 		predict = new HashMap<String, Integer>();
+		predictWeighted = new HashMap<String, Double>();
 	}
 	
 	/**
