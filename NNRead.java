@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 import java.io.FileReader;
 import java.io.BufferedReader;
@@ -13,7 +12,7 @@ import java.util.*;
 
 
 
-public class ReadFile {
+public class NNRead {
 	private String path;
 	private int numOfElements;
 	private double trainingPercent;
@@ -27,7 +26,7 @@ public class ReadFile {
 	
 	/** Constructor */
 	
-	public ReadFile(String filePath, double perTrain, double perTest){
+	public NNRead(String filePath, double perTrain, double perTest){
 		this.path = filePath;
 		this.trainingPercent = perTrain;
 		this.testingPercent = perTest;	
