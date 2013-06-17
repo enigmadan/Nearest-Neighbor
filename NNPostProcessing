@@ -76,13 +76,18 @@ public class NNPostProcessing {
 			train.useDelimiter(",");
 			ArrayList<Double> ar = new ArrayList<Double>();
 			String str = null;
+			boolean endClass = false;
 			while(train.hasNext()){
 				String temp = train.next();
 				try{
 					ar.add(Double.valueOf(temp));
 				}catch(NumberFormatException e){
+					endClass=true;
 					str = temp;
 				}
+			}
+			if(!endClass){
+				str = (ar.remove(ar.size()-1)).toString();
 			}
 			returnAr.add(new DataObject(str,ar));
 			train.close();
