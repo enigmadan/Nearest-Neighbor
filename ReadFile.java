@@ -1,24 +1,26 @@
+package knearest;
 
 import java.io.IOException;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Collections;
 import java.util.Arrays;
+import java.util.*;
 
-import java.util.ArrayList;
 
 
 
 public class ReadFile {
-  private String path;
+	private String path;
 	private int numOfElements;
 	private double trainingPercent;
 	private double testingPercent;
 	
-	String[] data;
+	ArrayList<String> data;
 	Random rgen = new Random();
 	
 	int counter = 0;
@@ -29,7 +31,18 @@ public class ReadFile {
 	public ReadFile(String filePath, double perTrain, double perTest){
 		this.path = filePath;
 		this.trainingPercent = perTrain;
-		this.trainingPercent = perTest;	
+		this.testingPercent = perTest;	
+		this.data = new ArrayList<String>();
+	}
+	
+	public void processData(){
+		try {
+			processFile();
+		} catch (IOException e){
+			e.getMessage();
+		}
+		
+		makeDataSets();
 	}
 	
 	/**
@@ -37,31 +50,29 @@ public class ReadFile {
 	* Read each data object into an array for further processing.
 	* 
 	*/
-	public void processFile() throws IOException {
+	private void processFile() throws IOException {
 	
-		BufferedReader textReader = new BufferedReader(new FileReader(this.path));
-		
-		data = new String[numOfElements];
+		BufferedReader textReader = new BufferedReader(new FileReader(this.path));		
 
 		while( textReader.read() == '%' || textReader.read() == '@' || textReader.readLine() == null)
 			textReader.readLine();
 		
-		int i = 0;
+		String line = textReader.readLine();
 		
-		while( textReader.readLine() != null){
-			
-			data[i] = textReader.readLine();
+		while(  line != null){
+			data.add(line);
 			numOfElements++;
-			i++;
+			line = textReader.readLine();
 		}
+		
+		Collections.shuffle(data);	
 		
 		textReader.close();	
 		
-		Collections.shuffle(Arrays.asList(data));	
 	}
 	
 	
-	public void makeDataSets(){
+	private void makeDataSets(){
 		try{
 			createFile("myTrain", trainingPercent);
 		} catch (IOException e){
@@ -82,30 +93,26 @@ public class ReadFile {
 	 * Pre: data String array
 	 * Post: File created 'fileName'.txt.
 	 */
-	public void createFile(String fileName, double percent) throws IOException{
-		BufferedWriter textWriter = new BufferedWriter(new FileWriter (fileName+".txt"));
+	private void createFile(String fileName, double percent) throws IOException{
+		BufferedWriter textWriter = new BufferedWriter(new FileWriter (fileName + ".txt"));
 
-		for(int i = 0; i < (int)data.length*percent; i++){
-			textWriter.write(selectRandomDataObject());
-			textWriter.newLine();
+		int size = (int)Math.round(data.size()*percent) - 1;
+
+		List<String> l = data.subList(counter, counter + size);
+		ListIterator<String> li = l.listIterator();
+		counter = size - 1;
+
+		
+		String tx = null;
+		
+		while (li.hasNext()){
+			tx = li.next();
+			if(tx != null){
+				textWriter.write(tx);
+				textWriter.newLine();
+			}
 		}
 		
 		textWriter.close();
-	}
-	
-	/**
-	 * Selects a data object from the randomly sorted String array.
-	 * Keeps a count to maintain the selection without replacement/
-	 *
-	 * Pre: data String array
-	 * Post: File created "myTrain.txt".
-	 * @return String with the data object information
-	 */
-	public String selectRandomDataObject(){
-		
-		String dataObject = data[counter];
-		counter++;
-		
-		return dataObject;		
 	}
 }
